@@ -90,14 +90,13 @@ class App extends React.Component {
   
   setTimer(length){
 
-    let audio = document.getElementById('beep');
+    // let audio = document.getElementById('beep');
     
 //  console.log('audio', audio)
 //     audio.src = "alarm.mp3";
 //     audio.play();
 
-this.audioRef.current.src = 'build.wav';
-this.audioRef.current.play();
+
 
     
     
@@ -142,18 +141,17 @@ this.audioRef.current.play();
       //set state of timeleft to seconds
       
       if (t < 0 && this.state.session === 'Session') {
- 
-// const audio = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3');
+ this.audioRef.current.src = 'build.wav';
+        this.audioRef.current.play();
 
-// audio.play();
-
-        
          clearInterval(yx);
         this.setState(breakBegin)
         console.log('outI' , this.state)
         return;
       }
       if (t < 0 && this.state.session === 'Break') {
+        this.audioRef.current.src = 'build.wav';
+        this.audioRef.current.play();
         clearInterval(yx);
         this.setState(sessionBegin)
         console.log('outII')
