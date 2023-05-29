@@ -120,7 +120,8 @@ console.log('countinueSession minutes' , minutes , 'countinueSession secounds' ,
 this.setState({
   timeleft:`${minutes}:${secounds}`,
   interInterval:zy,
-  clicked:true
+  clicked:true,
+  startStopOn:false
 })
 
   } , 1000)
@@ -132,14 +133,15 @@ this.setState({
            
         }else {
     if (nextState.clicked === false) {
- 
+      console.log("entering one CLICKED state")
       if (nextState.session === "Session") {
-       
-        this.setTimer(nextState.sessionlength);
+       console.log("entering session SESSION")
+        this.setTimer(nextState.sessionlength , "Session");
       } else {
        
       }
-        this.setTimer(nextState.breaklength);
+      console.log("entring session BREAK")
+        this.setTimer(nextState.breaklength , "Break");
      
     } else {
       console.log("clearing interval" , nextState);
@@ -157,7 +159,8 @@ this.setState({
   }
   }
 
-  setTimer(length) {
+  setTimer(length , sessionType) {
+ 
     // let audio = document.getElementById('beep');
 
     //  console.log('audio', audio)
@@ -167,20 +170,12 @@ this.setState({
     console.log("starting interval", length);
     let deadline = new Date();
     let addMinutes = deadline.setMinutes(deadline.getMinutes() + length );
-    let sessionBegin = {
-      session: "Session",
-      timeleft: `${this.state.sessionlength}:00`,
-      clicked: false,
-      breakTime: false,
-      sessionTime: true,
+    let BeginState = {
+      session: sessionType,
+      timeleft: `${length}:00`,
+      interInterval:null
     };
-    let breakBegin = {
-      session: "Break",
-      timeleft: `${this.state.breaklength}:00`,
-      clicked: false,
-      breakTime: true,
-      sessionTime: false,
-    };
+    
 
     let yx = setInterval(() => {
       console.log("addMinutes", addMinutes);
@@ -200,22 +195,16 @@ this.setState({
       // console.log(seconds);
       //set state of timeleft to seconds
 
-      if (t < 0 && this.state.session === "Session") {
+      if (t < 0 ) {
         this.audioRef.current.src = "build.wav";
         this.audioRef.current.play();
 
         clearInterval(yx);
-        this.setState(breakBegin);
-        console.log("outI", this.state);
-        return;
-      }
-      if (t < 0 && this.state.session === "Break") {
-        this.audioRef.current.src = "build.wav";
-        this.audioRef.current.play();
-        clearInterval(yx);
-        this.setState(sessionBegin);
-        console.log("outII");
-        return;
+        if(sessionType ==='Session'){
+            this.setTimer(this.state.breaklength , "Break")
+        }else{
+          this.setTimer(this.state.sessionlength , 'Session')
+        }
       }
       console.log("outIII", this.state);
       this.setState({
@@ -226,24 +215,7 @@ this.setState({
     }, 1000);
   }
   componentWillUpdate(nextProps, nextState) {
-    if (nextState.session !== "Session" && nextState.breakTime === true) {
-      console.log("nextState", nextState);
-
-      this.setState({
-        breakTime: false,
-       
-      });
-      nextState.sessionlength=nextState.timeleft;
-     
-      this.startStop(nextState);
-    }
-
-    if (nextState.session !== "Break" && nextState.sessionTime === true) {
-      this.setState({
-        sessionTime: false
-      });
-      this.startStop(nextState);
-    }
+ 
 
     if (nextState.sessionlength !== this.state.sessionlength && this.state.reset === true) {
       console.log("prevState", nextState);
@@ -255,6 +227,7 @@ this.setState({
   }
 
   render() {
+  
     return (
       <>
         <audio id="beep" ref={this.audioRef}></audio>
