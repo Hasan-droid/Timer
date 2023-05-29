@@ -90,47 +90,31 @@ class App extends React.Component {
     return result
 
   }
-continueSession(){
+  continueSession() {
+    const [minutes, seconds] = this.state.timeleft.split(':');
+    // const endTime = new Date().getTime() + (parseInt(minutes) * 60000) + (parseInt(seconds) * 1000);
   
-let [minutes , secounds]=this.state.timeleft.split(':')
-let CurrentDate=new Date();
-console.log('countinueSession minutes' , minutes , 'countinueSession secounds' , secounds)
-
-    // console.log('timeleftInSecounds' , timeLeftInSecounds)
-    // this.setState({
-    //   clicked: false,
-    //   startStopOn:true
-    // });
-    // this.setTimer(timeLeftInSecounds);
-
+    if (this.state.interInterval) {
+      console.log('entering the interval contine sessionII')
+      clearInterval(this.state.interInterval);
+      this.setState({
+        interInterval: null,
+        startStopOn: false
+      });
+    } else {
+     if(this.state.session==='Session'){
+      this.setTimer("Session")
+     }else{
+      this.setTimer("Break")
+     }
+    }
+  }
   
- let zy= setInterval(()=>{
-    // let now=new Date().getTime()
-//     let ExcatMinutes=CurrentDate.getMinutes()
-// let ExcactSecounds=CurrentDate.getSeconds()
-// let dateToUse=new Date()
-// let setTimeSecounds=dateToUse.setSeconds(dateToUse.getSeconds()+secounds)
-// let setTimeMinutes=dateToUse.setMinutes(dateToUse.getMinutes()+minutes)
-// console.log('dateToUse ' , dateToUse)
-// let t=(setTimeMinutes+setTimeSecounds)-now
-// var minutesSet = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60));
-// // console.log('minutes', minutes)
-// var secondsSet = Math.floor((t % (1000 * 60)) / 1000);
-// console.log('minutesSet' , minutesSet , 'secoundsSets' , secondsSet)
-this.setState({
-  timeleft:`${minutes}:${secounds}`,
-  interInterval:zy,
-  clicked:true,
-  startStopOn:false
-})
-
-  } , 1000)
-}
   startStop(nextState) {
+   
     if(nextState.startStopOn===true){
       console.log('starting continue session')
-            this.continueSession()
-           
+             this.continueSession()
         }else {
     if (nextState.clicked === false) {
       console.log("entering one CLICKED state")
@@ -138,10 +122,10 @@ this.setState({
        console.log("entering session SESSION")
         this.setTimer(nextState.sessionlength , "Session");
       } else {
-       
-      }
-      console.log("entring session BREAK")
+        console.log("entring session BREAK")
         this.setTimer(nextState.breaklength , "Break");
+      }
+     
      
     } else {
       console.log("clearing interval" , nextState);
@@ -159,31 +143,32 @@ this.setState({
   }
   }
 
-  setTimer(length , sessionType) {
- 
+  setTimer(sessionType) {
+    let [minutes , secounds]=this.state.timeleft.split(":");
+    const endTime = new Date().getTime() + (parseInt(minutes) * 60000) + (parseInt(secounds) * 1000);
     // let audio = document.getElementById('beep');
 
     //  console.log('audio', audio)
     //     audio.src = "alarm.mp3";
     //     audio.play();
 
-    console.log("starting interval", length);
-    let deadline = new Date();
-    let addMinutes = deadline.setMinutes(deadline.getMinutes() + length );
-    let BeginState = {
-      session: sessionType,
-      timeleft: `${length}:00`,
-      interInterval:null
-    };
+    // console.log("starting intervalss", length);
+    // let deadline = new Date();
+    // let addMinutes = deadline.setMinutes(deadline.getMinutes() + length );
+    // let BeginState = {
+    //   session: sessionType,
+    //   timeleft: `${length}:00`,
+    //   interInterval:null
+    // };
     
 
     let yx = setInterval(() => {
-      console.log("addMinutes", addMinutes);
+      // console.log("addMinutes", addMinutes);
       let now = new Date().getTime();
       //get the minutes and seconds from the now variable
       //
       // console.log('now', now)
-      var t = addMinutes - now;
+      var t = endTime - now;
       // console.log('t', t)
       var days = Math.floor(t / (1000 * 60 * 60 * 24));
       var hours = Math.floor((t % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -202,8 +187,10 @@ this.setState({
         clearInterval(yx);
         if(sessionType ==='Session'){
             this.setTimer(this.state.breaklength , "Break")
+            return
         }else{
           this.setTimer(this.state.sessionlength , 'Session')
+          return
         }
       }
       console.log("outIII", this.state);
