@@ -81,49 +81,18 @@ class App extends React.Component {
     // }
   }
 
-  getNumberOfSecounds(TimeInString){
-    const [minutes,seconds] = TimeInString.split(":");
-    console.log("minutes " , minutes , "secounds" , seconds)
-    const minutesInSecounds=minutes*60
-    const result=minutesInSecounds+seconds
-    console.log("result" , result)
-    return result
-
-  }
-  continueSession() {
-    const [minutes, seconds] = this.state.timeleft.split(':');
-    // const endTime = new Date().getTime() + (parseInt(minutes) * 60000) + (parseInt(seconds) * 1000);
-  
-    if (this.state.interInterval) {
-      console.log('entering the interval contine sessionII')
-      clearInterval(this.state.interInterval);
-      this.setState({
-        interInterval: null,
-        startStopOn: false
-      });
-    } else {
-     if(this.state.session==='Session'){
-      this.setTimer("Session")
-     }else{
-      this.setTimer("Break")
-     }
-    }
-  }
+ 
   
   startStop(nextState) {
    
-    if(nextState.startStopOn===true){
-      console.log('starting continue session')
-             this.continueSession()
-        }else {
     if (nextState.clicked === false) {
       console.log("entering one CLICKED state")
       if (nextState.session === "Session") {
        console.log("entering session SESSION")
-        this.setTimer(nextState.sessionlength , "Session");
+        this.setTimer( "Session");
       } else {
         console.log("entring session BREAK")
-        this.setTimer(nextState.breaklength , "Break");
+        this.setTimer( "Break");
       }
      
      
@@ -140,26 +109,15 @@ class App extends React.Component {
       // nextState.sessionlength=nextState.timeleft;
       console.log('next state session' , nextState)
     }
-  }
+  
   }
 
   setTimer(sessionType) {
     let [minutes , secounds]=this.state.timeleft.split(":");
     const endTime = new Date().getTime() + (parseInt(minutes) * 60000) + (parseInt(secounds) * 1000);
-    // let audio = document.getElementById('beep');
-
-    //  console.log('audio', audio)
-    //     audio.src = "alarm.mp3";
-    //     audio.play();
-
-    // console.log("starting intervalss", length);
-    // let deadline = new Date();
-    // let addMinutes = deadline.setMinutes(deadline.getMinutes() + length );
-    // let BeginState = {
-    //   session: sessionType,
-    //   timeleft: `${length}:00`,
-    //   interInterval:null
-    // };
+    this.setState({
+      session:sessionType
+    })
     
 
     let yx = setInterval(() => {
@@ -186,10 +144,16 @@ class App extends React.Component {
 
         clearInterval(yx);
         if(sessionType ==='Session'){
-            this.setTimer(this.state.breaklength , "Break")
-            return
-        }else{
-          this.setTimer(this.state.sessionlength , 'Session')
+          this.setState({
+            timeleft:`${this.state.breaklength}:00`,
+          })
+            this.setTimer("Break")
+          return
+        }else {
+          this.setState({
+            timeleft:`${this.state.sessionlength}:00`,
+          })
+          this.setTimer('Session')
           return
         }
       }
@@ -197,7 +161,8 @@ class App extends React.Component {
       this.setState({
         timeleft: `${minutes}:${seconds}`,
         clicked: true,
-        interInterval: yx,
+        interInterval: yx
+       
       });
     }, 1000);
   }
