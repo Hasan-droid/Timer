@@ -28,6 +28,7 @@ const initialState = {
   reset: false,
   breakTime: false,
   sessionTime: false,
+  startStopOn:false
 };
 
 class App extends React.Component {
@@ -89,26 +90,71 @@ class App extends React.Component {
     return result
 
   }
+continueSession(){
+  
+let [minutes , secounds]=this.state.timeleft.split(':')
+let CurrentDate=new Date();
+console.log('countinueSession minutes' , minutes , 'countinueSession secounds' , secounds)
 
+    // console.log('timeleftInSecounds' , timeLeftInSecounds)
+    // this.setState({
+    //   clicked: false,
+    //   startStopOn:true
+    // });
+    // this.setTimer(timeLeftInSecounds);
+
+  
+ let zy= setInterval(()=>{
+    // let now=new Date().getTime()
+//     let ExcatMinutes=CurrentDate.getMinutes()
+// let ExcactSecounds=CurrentDate.getSeconds()
+// let dateToUse=new Date()
+// let setTimeSecounds=dateToUse.setSeconds(dateToUse.getSeconds()+secounds)
+// let setTimeMinutes=dateToUse.setMinutes(dateToUse.getMinutes()+minutes)
+// console.log('dateToUse ' , dateToUse)
+// let t=(setTimeMinutes+setTimeSecounds)-now
+// var minutesSet = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60));
+// // console.log('minutes', minutes)
+// var secondsSet = Math.floor((t % (1000 * 60)) / 1000);
+// console.log('minutesSet' , minutesSet , 'secoundsSets' , secondsSet)
+this.setState({
+  timeleft:`${minutes}:${secounds}`,
+  interInterval:zy,
+  clicked:true
+})
+
+  } , 1000)
+}
   startStop(nextState) {
+    if(nextState.startStopOn===true){
+      console.log('starting continue session')
+            this.continueSession()
+           
+        }else {
     if (nextState.clicked === false) {
+ 
       if (nextState.session === "Session") {
+       
         this.setTimer(nextState.sessionlength);
       } else {
-        this.setTimer(nextState.breaklength);
+       
       }
+        this.setTimer(nextState.breaklength);
+     
     } else {
-      console.log("clearing interval");
+      console.log("clearing interval" , nextState);
       let clear = () => clearInterval(nextState.interInterval);
       clear();
       this.setState({
         clicked: false,
+        startStopOn:true
       });
-      let timeLeftInSecounds=this.getNumberOfSecounds(nextState.timeleft)
-      console.log('timeleftInSecounds' , timeLeftInSecounds)
-      nextState.sessionlength=nextState.timeleft;
+      // let timeLeftInSecounds=this.getNumberOfSecounds(nextState.timeleft)
+      // console.log('timeleftInSecounds' , timeLeftInSecounds)
+      // nextState.sessionlength=nextState.timeleft;
       console.log('next state session' , nextState)
     }
+  }
   }
 
   setTimer(length) {
@@ -120,7 +166,7 @@ class App extends React.Component {
 
     console.log("starting interval", length);
     let deadline = new Date();
-    let addMinutes = deadline.setSeconds(deadline.getSeconds() + (length * 60));
+    let addMinutes = deadline.setMinutes(deadline.getMinutes() + length );
     let sessionBegin = {
       session: "Session",
       timeleft: `${this.state.sessionlength}:00`,
