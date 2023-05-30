@@ -113,14 +113,13 @@ class App extends React.Component {
   }
 
   setTimer(sessionType) {
-    let [minutes , secounds]=this.state.timeleft.split(":");
-    const endTime = new Date().getTime() + (parseInt(minutes) * 60000) + (parseInt(secounds) * 1000);
-    this.setState({
-      session:sessionType
-    })
-    
+  
+    let [getMinutes , secounds]=this.state.timeleft.split(":");
+    const endTime = new Date().getTime() + (parseInt(getMinutes) * 60000) + (parseInt(secounds) * 1000);
+   
 
     let yx = setInterval(() => {
+    
       // console.log("addMinutes", addMinutes);
       let now = new Date().getTime();
       //get the minutes and seconds from the now variable
@@ -134,11 +133,12 @@ class App extends React.Component {
       // console.log('minutes', minutes)
       var seconds = Math.floor((t % (1000 * 60)) / 1000);
       // console.log('seconds', seconds)
-      var c = hours + ":" + minutes + ":" + seconds;
+      // var c = hours + ":" + minutes + ":" + seconds;
       // console.log(seconds);
       //set state of timeleft to seconds
 
       if (t < 0 ) {
+        console.log("t smaller")
         this.audioRef.current.src = "build.wav";
         this.audioRef.current.play();
 
@@ -146,14 +146,24 @@ class App extends React.Component {
         if(sessionType ==='Session'){
           this.setState({
             timeleft:`${this.state.breaklength}:00`,
+            session:"Break"
           })
+          console.log("Break")
+          setTimeout(() => {
             this.setTimer("Break")
+          }, 2000);
+           
           return
         }else {
           this.setState({
             timeleft:`${this.state.sessionlength}:00`,
+            session:"Session"
           })
-          this.setTimer('Session')
+          console.log("Session")
+          setTimeout(() => {
+            this.setTimer('Session')
+          }, 2000);
+         
           return
         }
       }
@@ -166,7 +176,7 @@ class App extends React.Component {
       });
     }, 1000);
   }
-  componentWillUpdate(nextProps, nextState) {
+  componentDidUpdate(nextProps, nextState) {
  
 
     if (nextState.sessionlength !== this.state.sessionlength && this.state.reset === true) {
