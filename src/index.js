@@ -174,7 +174,7 @@ class App extends React.Component {
         interInterval: yx
        
       });
-    }, 1000);
+    }, 950);
   }
   componentDidUpdate(nextProps, nextState) {
  
