@@ -162,9 +162,13 @@ class App extends React.Component {
         timeleft: `${minutes}:${seconds}`,
         clicked: true,
         interInterval: yx
-      })
-    }, 1000);
-    
+
+       
+      });
+    }, 950);
+
+
+
   }
   
   startStop(nextState) {
