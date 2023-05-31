@@ -1,19 +1,3 @@
-///////////////////////
-// Welcome to Cursor //
-///////////////////////
-
-/*
-Step 1: Try generating a react component that lets you play tictactoe with Cmd+K or Ctrl+K on a new line.
-  - Then integrate it into the code below and run with npm start
-
-Step 2: Try highlighting all the code with your mouse, then hit Cmd+k or Ctrl+K. 
-  - Instruct it to change the game in some way (e.g. add inline styles, add a start screen, make it 4x4 instead of 3x3)
-
-Step 3: Hit Cmd+L or Ctrl+L and ask the chat what the code does
-
-Step 4: To try out cursor on your own projects, go to the file menu (top left) and open a folder.
-*/
-
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./styles.css";
@@ -89,10 +73,8 @@ getMinusMinutes(mintues){
       });
   }
   sessionIncrement(e) {
-    console.log("sessionlength" , this.state)
     let [minutesOfTimeLeft , secoundsOfTimeLeft]=this.getTimeLeft();
     let mintues=this.getPlusMinutes(parseInt(minutesOfTimeLeft)+1);
-    console.log("mintues" , mintues)
    
     if (this.state.sessionlength < 60 && this.state.pause === true )
      this.state.canChangeSession?this.setState({
@@ -116,19 +98,12 @@ getMinusMinutes(mintues){
         sessionlength: this.getMinusMinutes(parseInt(this.state.sessionlength) - 1)
       });
   }
-
-
-
  
-  
   startStop(nextState) {
     if (nextState.clicked === false) {
-      console.log("entering one CLICKED state")
       if (nextState.session === "Session") {
-       console.log("entering session SESSION")
         this.setTimer( "Session");
       } else {
-        console.log("entring session BREAK")
         this.setTimer( "Break");
       }
      this.setState({
@@ -137,7 +112,6 @@ getMinusMinutes(mintues){
      
     } else {
       if(nextState.interInterval){
-        console.log("clearing intervalII" , nextState);
      clearTimeout(nextState.interInterval);
       }
     
@@ -148,10 +122,6 @@ getMinusMinutes(mintues){
         interInterval:null,
         pause:true
       });
-      // let timeLeftInSecounds=this.getNumberOfSecounds(nextState.timeleft)
-      // console.log('timeleftInSecounds' , timeLeftInSecounds)
-      // nextState.sessionlength=nextState.timeleft;
-      console.log('next state session' , nextState)
     }
     
   }
@@ -160,39 +130,23 @@ getMinusMinutes(mintues){
   
     const endTime = new Date().getTime() + (parseInt(minutesOfTimeLeft) * 60000) + (parseInt(secoundsOfTimeLeft) * 1000);
     this.updateTimer(sessionType , endTime)
-    console.log("this.state.interIntrival" , this.state.interInterval)
   }
 
    updateTimer(sessionType , endTime ){
-    // console.log("addMinutes", addMinutes);
     if(this.state.isRunning === false){
-      console.log("stop running" , this.state.interInterval)
       this.setState({
         isRunning:true
       })
       return
     }
- 
-    //get the minutes and seconds from the now variable
-    //
-    // console.log('now', now)
     let now = new Date().getTime();
-     console.log('now', now)
     let t = endTime - now;
-    // console.log('t', t)
     let minutes = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60));
-    // console.log('minutes', minutes)
     let seconds = Math.floor((t % (1000 * 60)) / 1000);
-    // console.log('seconds', seconds)
-    // var c = hours + ":" + minutes + ":" + seconds;
-    // console.log(seconds);
-    //set state of timeleft to seconds
-
     minutes=minutes.toString().padStart(2, '00');
     seconds=seconds.toString().padStart(2, '00');
 
     if (t < 0 ) {
-      console.log("t smaller")
       this.audioRef.current.src = "build.wav";
       this.audioRef.current.play();
 
@@ -204,7 +158,6 @@ getMinusMinutes(mintues){
           canChangeBreak:false,
           canChangeSession:false
         })
-        console.log("Break")
         setTimeout(() => {
           this.setTimer("Break")
         }, 3000);
@@ -217,7 +170,6 @@ getMinusMinutes(mintues){
           canChangeBreak:true,
           canChangeSession:true
         })
-        console.log("Session")
         setTimeout(() => {
           this.setTimer('Session')
         }, 3000);
@@ -226,16 +178,12 @@ getMinusMinutes(mintues){
       }
     }
     const setTime=()=> setTimeout(() => this.updateTimer(sessionType , endTime), 950);
-    console.log("outIII", this.state);
     this.setState({
       timeleft: `${minutes}:${seconds}`,
       clicked: true,
       interInterval:setTime
     });
-    console.log("outIV", this.state);
-    console.log("interInterval" , this.state.interInterval)
     if(this.state.isRunning !== false){
-      console.log("setTime")
         setTime()
      }
      
@@ -243,16 +191,7 @@ getMinusMinutes(mintues){
     }
 
   componentDidUpdate(nextProps, nextState) {
- 
-    // if(nextState.isRunning===false ){
-    //   console.log("nextState.isRunning===false")
-    //   this.setState({
-    //     isRunning:true
-    //   })
-    //  }
     if (nextState.sessionlength !== this.state.sessionlength && this.state.reset === true) {
-      console.log("prevState", nextState);
-   
       this.setState({
         timeleft: `${this.state.sessionlength}:00`,
         reset: false,
@@ -260,15 +199,7 @@ getMinusMinutes(mintues){
     }
   }
 
-  //stop the timer
-  //clear the setTimeOut
-  //
-
-
-
-  
-
-  render() {
+    render() {
   
     return (
       <>
