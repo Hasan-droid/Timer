@@ -4,9 +4,9 @@ import "./styles.css";
 
 const initialState = {
   breaklength: "05",
-  sessionlength: "03",
+  sessionLength: "03",
   session: "Session",
-  timeleft: "03:00",
+  timeLeft: "03:00",
   clicked: false,
   interInterval: null,
   reset: false,
@@ -32,39 +32,38 @@ class App extends React.Component {
     });
   }
   getTimeLeft() {
-    let [minutesOfTimeLeft, secoundsOfTimeLeft] =
-      this.state.timeleft.split(":");
-    return [minutesOfTimeLeft, secoundsOfTimeLeft];
+    let [minutesOfTimeLeft, secondsOfTimeLeft] = this.state.timeLeft.split(":");
+    return [minutesOfTimeLeft, secondsOfTimeLeft];
   }
-  getPlusMinutes(mintues) {
-    let mintuesDigits = /^\d{1}$/.test(mintues)
-      ? `0${parseInt(mintues)}`
-      : parseInt(mintues);
-    return mintuesDigits;
+  getPlusMinutes(minutes) {
+    let minutesDigits = /^\d{1}$/.test(minutes)
+      ? `0${parseInt(minutes)}`
+      : parseInt(minutes);
+    return minutesDigits;
   }
-  getMinusMinutes(mintues) {
-    if (mintues < 0) return "00";
-    let minusMintuesDigits = /^\d{2}$/.test(mintues) ? mintues : `0${mintues}`;
-    return minusMintuesDigits;
+  getMinusMinutes(minutes) {
+    if (minutes < 0) return "00";
+    let minusMinutesDigits = /^\d{2}$/.test(minutes) ? minutes : `0${minutes}`;
+    return minusMinutesDigits;
   }
 
   breakDecrement(e) {
-    let [minutesOfTimeLeft, secoundsOfTimeLeft] = this.getTimeLeft();
-    let mintues = this.getMinusMinutes(minutesOfTimeLeft - 1);
+    let [minutesOfTimeLeft, secondsOfTimeLeft] = this.getTimeLeft();
+    let minutes = this.getMinusMinutes(minutesOfTimeLeft - 1);
     if (parseInt(this.state.breaklength) > 0 && this.state.pause === true) {
       this.state.canChangeBreak
         ? this.setState({
             breaklength: this.getMinusMinutes(this.state.breaklength - 1),
           })
         : this.setState({
-            breaklength: mintues,
-            timeleft: `${mintues}:${secoundsOfTimeLeft}`,
+            breaklength: minutes,
+            timeLeft: `${minutes}:${secondsOfTimeLeft}`,
           });
     }
   }
   breakIncrement(e) {
-    let [minutesOfTimeLeft, secoundsOfTimeLeft] = this.getTimeLeft();
-    let mintues = this.getPlusMinutes(parseInt(minutesOfTimeLeft) + 1);
+    let [minutesOfTimeLeft, secondsOfTimeLeft] = this.getTimeLeft();
+    let minutes = this.getPlusMinutes(parseInt(minutesOfTimeLeft) + 1);
     if (this.state.breaklength < 60 && this.state.pause === true)
       this.state.canChangeBreak
         ? this.setState({
@@ -73,39 +72,39 @@ class App extends React.Component {
             ),
           })
         : this.setState({
-            breaklength: mintues,
-            timeleft: `${mintues}:${secoundsOfTimeLeft}`,
+            breaklength: minutes,
+            timeLeft: `${minutes}:${secondsOfTimeLeft}`,
           });
   }
   sessionIncrement(e) {
-    let [minutesOfTimeLeft, secoundsOfTimeLeft] = this.getTimeLeft();
-    let mintues = this.getPlusMinutes(parseInt(minutesOfTimeLeft) + 1);
+    let [minutesOfTimeLeft, secondsOfTimeLeft] = this.getTimeLeft();
+    let minutes = this.getPlusMinutes(parseInt(minutesOfTimeLeft) + 1);
 
-    if (this.state.sessionlength < 60 && this.state.pause === true)
+    if (this.state.sessionLength < 60 && this.state.pause === true)
       this.state.canChangeSession
         ? this.setState({
-            sessionlength: mintues,
-            timeleft: `${mintues}:${secoundsOfTimeLeft}`,
+            sessionLength: minutes,
+            timeLeft: `${minutes}:${secondsOfTimeLeft}`,
           })
         : this.setState({
-            sessionlength: this.getPlusMinutes(
-              parseInt(this.state.sessionlength) + 1
+            sessionLength: this.getPlusMinutes(
+              parseInt(this.state.sessionLength) + 1
             ),
           });
   }
 
   sessionDecrement() {
-    let [minutesOfTimeLeft, secoundsOfTimeLeft] = this.getTimeLeft();
-    let minusMintues = this.getMinusMinutes(minutesOfTimeLeft - 1);
-    if (this.state.sessionlength > 0 && this.state.pause === true)
+    let [minutesOfTimeLeft, secondsOfTimeLeft] = this.getTimeLeft();
+    let minusMinutes = this.getMinusMinutes(minutesOfTimeLeft - 1);
+    if (this.state.sessionLength > 0 && this.state.pause === true)
       this.state.canChangeSession
         ? this.setState((prevState) => ({
-            sessionlength: minusMintues,
-            timeleft: `${minusMintues}:${secoundsOfTimeLeft}`,
+            sessionLength: minusMinutes,
+            timeLeft: `${minusMinutes}:${secondsOfTimeLeft}`,
           }))
         : this.setState({
-            sessionlength: this.getMinusMinutes(
-              parseInt(this.state.sessionlength) - 1
+            sessionLength: this.getMinusMinutes(
+              parseInt(this.state.sessionLength) - 1
             ),
           });
   }
@@ -131,12 +130,12 @@ class App extends React.Component {
     }
   }
   setTimer(sessionType) {
-    let [minutesOfTimeLeft, secoundsOfTimeLeft] = this.getTimeLeft();
+    let [minutesOfTimeLeft, secondsOfTimeLeft] = this.getTimeLeft();
 
     const endTime =
       new Date().getTime() +
       parseInt(minutesOfTimeLeft) * 60000 +
-      parseInt(secoundsOfTimeLeft) * 1000;
+      parseInt(secondsOfTimeLeft) * 1000;
     this.updateTimer(sessionType, endTime);
   }
 
@@ -147,9 +146,9 @@ class App extends React.Component {
       });
       return;
     }
-    if (this.state.sessionlength === "00" && this.state.breaklength === "00") {
-      let [minutesOfTimeLeft, secoundsOfTimeLeft] = this.getTimeLeft();
-      if (minutesOfTimeLeft === "00" && secoundsOfTimeLeft === "00") {
+    if (this.state.sessionLength === "00" && this.state.breaklength === "00") {
+      let [minutesOfTimeLeft, secondsOfTimeLeft] = this.getTimeLeft();
+      if (minutesOfTimeLeft === "00" && secondsOfTimeLeft === "00") {
         this.audioRef.current.src = "build.wav";
         this.audioRef.current.play();
         this.setState(initialState);
@@ -170,7 +169,7 @@ class App extends React.Component {
 
       if (sessionType === "Session") {
         this.setState({
-          timeleft: `${this.state.breaklength}:00`,
+          timeLeft: `${this.state.breaklength}:00`,
           session: "Break",
           canChangeBreak: false,
           canChangeSession: false,
@@ -182,7 +181,7 @@ class App extends React.Component {
         return;
       } else {
         this.setState({
-          timeleft: `${this.state.sessionlength}:00`,
+          timeLeft: `${this.state.sessionLength}:00`,
           session: "Session",
           canChangeBreak: true,
           canChangeSession: true,
@@ -197,7 +196,7 @@ class App extends React.Component {
     const setTime = () =>
       setTimeout(() => this.updateTimer(sessionType, endTime), 950);
     this.setState({
-      timeleft: `${minutes}:${seconds}`,
+      timeLeft: `${minutes}:${seconds}`,
       clicked: true,
       interInterval: setTime,
     });
@@ -211,11 +210,11 @@ class App extends React.Component {
 
   componentDidUpdate(nextProps, nextState) {
     if (
-      nextState.sessionlength !== this.state.sessionlength &&
+      nextState.sessionLength !== this.state.sessionLength &&
       this.state.reset === true
     ) {
       this.setState({
-        timeleft: `${this.state.sessionlength}:00`,
+        timeLeft: `${this.state.sessionLength}:00`,
         reset: false,
       });
     }
@@ -233,7 +232,7 @@ class App extends React.Component {
 
               <div id="timer-label">{this.state.session}</div>
 
-              <div id="time-left">{this.state.timeleft}</div>
+              <div id="time-left">{this.state.timeLeft}</div>
             </div>
           </div>
         </div>
@@ -241,21 +240,21 @@ class App extends React.Component {
           <div className="column-container">
             <button
               id="break-increment"
-              className="paddelement"
+              className="paddingElement"
               onClick={(e) => this.breakIncrement(e)}
             >
               break-increment
             </button>
             <button
               id="session-increment"
-              className="paddelement"
+              className="paddingElement"
               onClick={(e) => this.sessionIncrement(e)}
             >
               session-increment
             </button>
             <button
               id="start_stop"
-              className="paddelement"
+              className="paddingElement"
               onClick={() => this.startStop(this.state)}
             >
               Start_Stop
@@ -265,27 +264,27 @@ class App extends React.Component {
             <div id="break-length" className="numbers">
               {this.state.breaklength}
             </div>
-            <div id="session-length">{this.state.sessionlength}</div>
+            <div id="session-length">{this.state.sessionLength}</div>
           </div>
 
           <div className="column-container">
             <button
               id="break-decrement"
-              className="paddelement"
+              className="paddingElement"
               onClick={(e) => this.breakDecrement(e)}
             >
               break-decrement
             </button>
             <button
               id="session-decrement"
-              className="paddelement"
+              className="paddingElement"
               onClick={(e) => this.sessionDecrement(e)}
             >
               session-decrement
             </button>
             <button
               id="reset"
-              className="paddelement"
+              className="paddingElement"
               onClick={(e) => this.handleReset(e)}
             >
               Reset
